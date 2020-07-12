@@ -1,0 +1,22 @@
+- name: playbook2 de envio de archivos
+  hosts: target2
+  tasks:
+    - name: copiado de archivo
+      copy:
+        src: enviable.txt
+        dest: ~/enviable.txt
+        owner: osboxes
+        group: osboxes
+        mode: u=rw,g=r,o=r
+    - name:
+      become: true
+      group:
+        name: devops
+        gid: 6969
+    - name: 'user creation'
+      become: true
+      user:
+        name: '{{ username }}'
+        uid: 6969
+        group: devops
+        append: yes

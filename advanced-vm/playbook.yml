@@ -1,0 +1,62 @@
+- name: Deploy webapp
+  hosts: target1
+  tasks:
+    - name: Upgrade all packages to the latest version
+      become: true
+      shell: |
+        apt-get update -y
+    - name: install required dependencies;
+      become: true
+      apt: 
+        name: 
+         - python3.8
+         - python-setuptools
+         - python-dev
+         - build-essential
+         - python3-pip
+        state: present
+      register: loges
+    - debug: msg="{{ loges }}"
+    - name: install mysql
+      become: true
+      yum: 
+        name:
+          - mysql-server
+          - mysql-client
+      register: logs
+    - debug: msg="{{ logs }}"
+    - name: mysql config
+      become_user: osboxes
+      copy:
+        content: |
+          [client]
+          user=root
+          password=
+        dest: "/home/osboxes/.my.cnf"
+    - name: pip install
+      become: true
+      pip:
+        name: PyMySQL
+        state: present
+    - name: hola
+      shell: |
+        echo "
+        DROP DATABASE employee_db;
+        CREATE DATABASE employee_db; 
+        "> test.sql
+        sudo mysql -u root < test.sql
+    - name: start mysql
+      become: true
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+    - name: create db user
+      become: true
+      mysql_user:
+        name: db_user
+        password: Passw0rd
+        priv: '*.* ALL'
+        state: present
+        host: '%'
+

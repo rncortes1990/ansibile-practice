@@ -1,0 +1,17 @@
+- name: playbook2 de envio de archivos
+  hosts: target2
+  tasks:
+    - name: 'user creation'
+      become: true
+      user:
+        name: '{{ item.user }}'
+        group: devops
+        append: yes
+        password: "{{ item.pass| password_hash('sha512')}}"
+      with_items:
+       - user: lortizt
+         pass: 'Falabella1'
+       - user: pdubol
+         pass: 'Falabella1'
+       - user: rncortess
+         pass: 'Falabella19!'

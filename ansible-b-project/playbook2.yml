@@ -1,0 +1,52 @@
+- name: instalacion firewall y mariadb
+  hosts: target1
+  roles:
+    - zauberpony.mysql-query
+  tasks:
+    - name: instalacion firewalld y mariadb
+      become: true
+      yum:
+       name:
+       - firewalld
+       - mariadb-server
+    - name: mariadb and firewall services
+      become: true
+      service:
+       name: "{{ item }}"
+       state: started
+       enabled: yes
+      loop:
+       - mariadb
+       - firewalld
+    - name: firewall config
+      become: true
+      firewalld:
+        port: 3306/tcp
+        permanent: yes
+        zone: public
+        state: enabled
+        immediate: yes
+    - name: mysqlconfig
+      become: true
+      command: "mysql -e '{{item}}' "
+      loop:
+       - CREATE DATABASE ecomdb;
+       - CREATE USER ecomuser@localhost IDENTIFIED BY "ecompassword";
+       - GRANT ALL PRIVILEGES ON *.* TO 'ecomuser'@'localhost';
+       - FLUSH PRIVILEGES;
+    - name: upload db configuration file
+      become: yes
+      become_user: root
+      copy:
+        src: bd-script/{{db_conf}}
+        dest: /root/db-config.sql
+    - name: load database config
+      shell: >  
+         {{item}}
+      loop:
+        - mysql -h localhost ecomdb --skip-column-names --execute 'USE ecomdb;'  
+        - mysql -h localhost ecomdb --skip-column-names --execute 'CREATE TABLE products (id mediumint(8) unsigned NOT NULL auto_increment,Name varchar(255) default NULL,Price varchar(255) default NULL, ImageUrl varchar(255) default NULL,PRIMARY KEY (id)) AUTO_INCREMENT=1;'
+        - mysql -h localhost ecomdb --skip-column-names --execute 'INSERT INTO products (Name,Price,ImageUrl) VALUES ("Laptop","100","c-1.png"),("Drone","200","c-2.png"),("VR","300","c-3.png"),("Tablet","50","c-5.png"),("Watch","90","c-6.png"),("Phone Covers","20","c-7.png"),("Phone","80","c-8.png"),("Laptop","150","c-4.png");'
+
+
+    

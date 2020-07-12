@@ -1,0 +1,17 @@
+version: '2'
+services:
+ ubuntu1:
+  container_name: ubuntu1
+  image: mmumshad/ubuntu-ssh-enabled
+ ubuntu2:
+  container_name: ubuntu2
+  image: mmumshad/ubuntu-ssh-enabled
+ ubuntu3:
+  container_name: ubuntu3
+  image: mmumshad/ubuntu-ssh-enabled
+ centos:
+  image: centos:7
+  tty: true
+  command: "bash"
+  volumes:
+  - /Users/raulcortes/ansiblecurso:/root

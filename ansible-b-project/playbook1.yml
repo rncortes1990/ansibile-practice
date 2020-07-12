@@ -1,0 +1,49 @@
+- name: intalacion firewalld y app ecommerce
+  hosts: target1
+  tasks:
+    - name: intalacion firewalld y app ecommerce
+      become: true
+      yum:
+       name:
+       - firewalld
+       - httpd
+       - php
+       - php-mysql
+       - git
+    - name: config php
+      become: true
+      lineinfile:
+        dest: /etc/httpd/conf/httpd.conf
+        regexp: 'index.html'
+        line: 'index.php'
+        backrefs: yes
+    - name: firewall config
+      become: true
+      firewalld:
+        port: 80/tcp
+        permanent: yes
+        zone: public
+        state: enabled
+        immediate: yes
+    - name: git clone
+      become: true
+      shell: >
+        git clone https://github.com/kodekloudhub/learning-app-ecommerce.git /var/www/html/
+    - name: httpd services
+      become: true
+      service:
+       name: "{{ item }}"
+       state: started
+       enabled: yes
+      loop:
+       - httpd
+    - name: config php
+      become: true
+      lineinfile:
+        dest: /var/www/html/index.php
+        regexp: '172.20.1.101'
+        line: 'localhost'
+        backrefs: yes
+    - name: test
+      command: curl http://localhost
+      
