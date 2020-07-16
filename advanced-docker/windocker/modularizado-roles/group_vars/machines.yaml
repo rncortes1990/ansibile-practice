@@ -1,0 +1,11 @@
+#  En caso de tener variables por ambiente se deben generar ymls separados indicando los datos, los ymls
+#  sepados deben tener el nombre de su host especificado en ansible_host
+users:
+ - nicolas
+ - luchito
+ - phillippe
+group_name: devops
+default_pass: Falabella1
+editor:
+ name: vim
+ state: present

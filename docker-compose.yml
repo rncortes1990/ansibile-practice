@@ -14,4 +14,4 @@ services:
   tty: true
   command: "bash"
   volumes:
-  - /Users/raulcortes/ansiblecurso:/root
+  - .:/root

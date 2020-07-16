@@ -1,0 +1,6 @@
+- name: Update all packages
+  shell: "apt-get update -y"
+- name: install vim
+  apt:
+   name: "{{ editor.name }}"
+   state: "{{ editor.state }}"

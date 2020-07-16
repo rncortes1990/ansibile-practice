@@ -1,0 +1,8 @@
+- name: mainRecipe
+  hosts: all
+  serial: 5
+  roles:
+   - machine-sw
+   - users-creation
+       
+       

@@ -1,0 +1,7 @@
+- name: mainRecipe
+  hosts: all
+  tasks:
+   - include: tasks/machine-sw.yml
+   - include: tasks/users-creation.yml
+       
+       

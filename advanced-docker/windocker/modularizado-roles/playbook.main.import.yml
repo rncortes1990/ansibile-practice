@@ -1,0 +1,13 @@
+- name: mainRecipe
+  hosts: all
+  tasks:
+   - name: salute
+     shell: echo "hola"
+   - import_role:
+      name: machine-sw
+   - import_role:
+      name: users-creation
+   - name: farewell
+     shell: echo "bye"
+       
+       

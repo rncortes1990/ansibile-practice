@@ -1,0 +1,15 @@
+- name: Create Group
+  group:
+   name: "{{ group_name }}"
+   state: present
+- name: Create users
+  user:
+   name: "{{ item }}"
+   group: "{{ group_name }}"
+   password: "{{ default_pass}}"
+  loop: "{{ users | flatten(1) }}"
+- name: copy app file
+  copy:
+    src: enviable.txt
+    dest: "/home/{{ item }}/enviable-enviado.txt"
+  loop: "{{ users | flatten(1) }}"
